@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz Game</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #4338ca;
+            --background-start: #f8faff;
+            --background-end: #eef2ff;
+            --text-color: #1e293b;
+            --card-bg: #ffffff;
+            --success-color: #22c55e;
+            --error-color: #ef4444;
+            --border-radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--background-start), var(--background-end));
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            width: 90%;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .quiz-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .quiz-header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .score-display {
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .score-display i {
+            color: #fbbf24;
+        }
+
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 2.5rem;
+            text-align: center;
+            color: var(--text-color);
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .option-button {
+            background: var(--card-bg);
+            border: 2px solid rgba(79, 70, 229, 0.2);
+            color: var(--text-color);
+            padding: 1.25rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .option-button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 0;
+        }
+
+        .option-button:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+        }
+
+        .option-button.correct {
+            background: var(--success-color);
+            border-color: var(--success-color);
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .option-button.incorrect {
+            background: var(--error-color);
+            border-color: var(--error-color);
+            color: white;
+            transform: scale(0.98);
+        }
+
+        .next-button {
+            display: block;
+            width: 100%;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 1.25rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .next-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .results-container {
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .final-score {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin: 1.5rem 0;
+            font-weight: 700;
+        }
+
+        .high-scores {
+            margin: 2.5rem 0;
+            padding: 1.5rem;
+            background: rgba(79, 70, 229, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(79, 70, 229, 0.1);
+        }
+
+        .high-scores h3 {
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+
+        .restart-button {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 1.25rem 2.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .restart-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .quiz-container {
+                padding: 1.5rem;
+            }
+
+            .question {
+                font-size: 1.25rem;
+            }
+
+            .quiz-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <!-- Quiz content will be dynamically inserted here -->
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

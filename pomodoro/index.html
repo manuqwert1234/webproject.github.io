@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Timer</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --background-color: #f8fafc;
+            --text-color: #1e293b;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 90%;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .timer-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .timer-display {
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 1rem 0;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background: var(--secondary-color);
+        }
+
+        button:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .timer-mode {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .mode-button {
+            background: transparent;
+            color: var(--text-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .mode-button.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .tasks-section {
+            margin-top: 2rem;
+        }
+
+        .task-input {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .tasks-list {
+            list-style: none;
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f1f5f9;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+        }
+
+        .task-item.completed {
+            background: #dcfce7;
+        }
+
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: #64748b;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .task-actions button {
+            padding: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .delete-button {
+            background: #ef4444;
+        }
+
+        .delete-button:hover {
+            background: #dc2626;
+        }
+
+        .settings-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .setting-item {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .setting-item label {
+            font-weight: 500;
+        }
+
+        .setting-item input {
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .timer-display {
+                font-size: 3rem;
+            }
+
+            .timer-controls {
+                flex-direction: column;
+            }
+
+            .task-input {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="timer-section">
+            <div class="timer-mode">
+                <button 
+                    class="mode-button" 
+                    onclick="setMode('work')"
+                >
+                    Work
+                </button>
+                <button 
+                    class="mode-button" 
+                    onclick="setMode('break')"
+                >
+                    Break
+                </button>
+            </div>
+            
+            <div class="timer-display">
+                25:00
+            </div>
+            
+            <div class="timer-controls">
+                <button onclick="startTimer()">Start</button>
+                <button onclick="pauseTimer()" disabled>Pause</button>
+                <button onclick="resetTimer()">Reset</button>
+            </div>
+        </div>
+
+        <div class="tasks-section">
+            <h2>Tasks</h2>
+            <div class="task-input">
+                <input 
+                    type="text" 
+                    placeholder="Add a new task"
+                >
+                <button onclick="addTask()">Add Task</button>
+            </div>
+            
+            <ul class="tasks-list">
+                <!-- Tasks will be dynamically inserted here -->
+            </ul>
+        </div>
+
+        <div class="settings-section">
+            <h2>Settings</h2>
+            <div class="settings-grid">
+                <div class="setting-item">
+                    <label>Work Duration (minutes)</label>
+                    <input 
+                        type="number" 
+                        min="1" 
+                        max="60"
+                        value="25"
+                    >
+                </div>
+                <div class="setting-item">
+                    <label>Break Duration (minutes)</label>
+                    <input 
+                        type="number" 
+                        min="1" 
+                        max="30"
+                        value="5"
+                    >
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html> 

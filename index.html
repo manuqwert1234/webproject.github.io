@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Name | Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        :root {
+            --timeline-color: #0984e3;
+            --timeline-dot-size: 16px;
+            --timeline-line-width: 2px;
+            --primary-color: #2d3436;
+            --secondary-color: #0984e3;
+            --background-color: #ffffff;
+            --text-color: #2d3436;
+            --accent-color: #00b894;
+            --gray-light: #dfe6e9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header Styles */
+        header {
+            padding: 2rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 4rem;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 2rem;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            color: #636e72;
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--secondary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .cta-button:hover::after {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(9, 132, 227, 0.3);
+        }
+
+        /* Projects Section */
+        .projects {
+            padding: 6rem 0;
+            background: #f8f9fa;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 1.8rem;
+            margin: 2rem 0;
+            text-align: center;
+            color: var(--secondary-color);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            min-height: 600px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+            animation-delay: 0.3s;
+            text-align: center;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 250px;
+            object-fit: contain;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+            background-color: #f8f9fa;
+            padding: 1rem;
+        }
+
+        .project-card:hover .project-image {
+            transform: scale(1.02);
+        }
+
+        .project-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .project-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .project-description {
+            color: #64748b;
+            font-size: 1.125rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 0.875rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .tag {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
+            padding: 0.625rem 1.25rem;
+            border-radius: 100px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            letter-spacing: 0.01em;
+        }
+
+        .tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        /* Experience Section */
+        .experience {
+            padding: 6rem 0;
+            background: #f8f9fa;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: var(--timeline-line-width);
+            height: 100%;
+            background: var(--timeline-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            width: 50%;
+            padding: 0 2rem;
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+
+        .timeline-content {
+            position: relative;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            width: var(--timeline-dot-size);
+            height: var(--timeline-dot-size);
+            background: var(--timeline-color);
+            border-radius: 50%;
+            top: 50%;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::before {
+            right: calc(-2rem - var(--timeline-dot-size)/2);
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::before {
+            left: calc(-2rem - var(--timeline-dot-size)/2);
+        }
+
+        .timeline-content h3 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-content h4 {
+            color: var(--text-color);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-date {
+            color: #636e72;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 0;
+            }
+            .timeline-item {
+                width: 100%;
+                left: 0 !important;
+                padding-left: 2rem;
+            }
+            .timeline-content::before {
+                left: calc(-2rem - var(--timeline-dot-size)/2) !important;
+            }
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 6rem 0;
+        }
+
+        .contact-content {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-description {
+            color: #636e72;
+            margin-bottom: 2rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-link {
+            color: var(--text-color);
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-link:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem 0;
+            text-align: center;
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.25rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <a href="#" class="logo">Adithyan Ajish</a>
+            <nav class="nav-links">
+                <a href="#experience">Experience</a>
+                <a href="#projects">Projects</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Hi, I'm <span style="color: var(--secondary-color)">Adithyan Ajish</span></h1>
+                <h2 class="hero-subtitle">BTech CSE Student & Web Developer</h2>
+                <p class="hero-description">
+                    Currently pursuing BTech in Computer Science at VIT Chennai. Web Developer Intern at Siemens Digital Industries Software, specializing in frontend development and user interface design.
+                </p>
+                <a href="#projects" class="cta-button">View My Work</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience" class="experience">
+        <div class="container">
+            <h2 class="section-title">Professional Experience</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Lead Web Developer</h3>
+                        <h4>Data Science Club VIT Chennai</h4>
+                        <p class="timeline-date">Jul 2024 - Present</p>
+                        <p>Leading web development initiatives and managing team projects.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Web Developer Intern</h3>
+                        <h4>Siemens Digital Industries Software</h4>
+                        <p class="timeline-date">Jul 2024 - Feb 2025</p>
+                        <p>Contributed to the SkillX Project, implementing frontend features and enhancing user interfaces. Developed randomized questions feature for the test platform.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Web Developer</h3>
+                        <h4>Data Science Club VIT Chennai</h4>
+                        <p class="timeline-date">Aug 2023 - Jul 2024</p>
+                        <p>Developed and maintained web applications for the club's initiatives.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="projects">
+        <div class="container">
+            <h2 class="section-title">Featured Projects</h2>
+            <div class="projects-grid">
+               
+        </div>
+
+        <h2 class="section-subtitle">Games & Interactive Projects</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200'><rect width='400' height='200' fill='%232c3e50'/><text x='200' y='100' fill='%23ecf0f1' font-family='Arial' font-size='24' text-anchor='middle'>Game Over</text><text x='200' y='140' fill='%233498db' font-family='Arial' font-size='18' text-anchor='middle'>Score: 1</text><text x='200' y='170' fill='%233498db' font-family='Arial' font-size='18' text-anchor='middle'>High Score: 3</text></svg>" alt="Flappy Bird Game" class="project-image">
+                <div class="project-content">
+                    <h3 class="project-title">Flappy Bird</h3>
+                    <p class="project-description">
+                        A modern implementation of the classic Flappy Bird game with animation </p>
+                    <div class="project-tags">
+                        <span class="tag">Canvas API</span>
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">HTML5</span>
+                    </div>
+                    <a href="bonus-projects/flappy-bird/index.html" class="cta-button">Play Game</a>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200'><rect width='400' height='200' fill='%23000B2E'/><rect x='10' y='10' width='380' height='180' fill='none' stroke='%230984e3' stroke-width='2' rx='8'/><polygon points='200,150 190,170 210,170' fill='%230984e3'/><circle cx='200' cy='100' r='30' fill='none' stroke='%230984e3' stroke-width='2'/><text x='20' y='30' fill='%230984e3' font-family='Arial' font-size='14'>SCORE: 0</text><text x='320' y='30' fill='%230984e3' font-family='Arial' font-size='14'>LEVEL: 1</text></svg>" alt="Space Shooter Game" class="project-image">
+                <div class="project-content">
+                    <h3 class="project-title">Space Shooter</h3>
+                    <p class="project-description">
+                        An exciting space shooting game with multiple enemy types and power-ups.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">Canvas API</span>
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">Game Physics</span>
+                    </div>
+                    <a href="bonus-projects/space-shooter/index.html" class="cta-button">Play Game</a>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200'><rect width='400' height='200' fill='%23f8f9fa'/><text x='200' y='60' fill='%234f46e5' font-family='Arial' font-size='24' text-anchor='middle'>Interactive Quiz</text><rect x='40' y='80' width='320' height='40' fill='white' stroke='%234f46e5' stroke-width='2' rx='8'/><text x='200' y='105' fill='%231e293b' font-family='Arial' font-size='14' text-anchor='middle'>Which Italian city is home of Fiat?</text><rect x='40' y='130' width='320' height='30' fill='white' stroke='%234f46e5' stroke-width='1' rx='15'/><text x='55' y='150' fill='%231e293b' font-family='Arial' font-size='12'>Turin</text></svg>" alt="Quiz Game" class="project-image">
+                <div class="project-content">
+                    <h3 class="project-title">Quiz Game</h3>
+                    <p class="project-description">
+                        Test your knowledge with this interactive quiz game featuring multiple categories.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">Web Storage</span>
+                        <span class="tag">DOM API</span>
+                    </div>
+                    <a href="quiz-game/index.html" class="cta-button">Start Quiz</a>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-subtitle">Productivity Tools</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200'><rect width='400' height='200' fill='%23f8f9fa'/><text x='200' y='40' fill='%232563eb' font-family='Arial' font-size='20' text-anchor='middle'>Finance Tracker</text><rect x='40' y='60' width='100' height='80' fill='white' stroke='%232563eb' stroke-width='2' rx='8'/><text x='90' y='85' fill='%232563eb' font-family='Arial' font-size='14' text-anchor='middle'>Balance</text><text x='90' y='110' fill='%232563eb' font-family='Arial' font-size='16' text-anchor='middle'>$100.00</text><rect x='150' y='60' width='100' height='80' fill='white' stroke='%232563eb' stroke-width='2' rx='8'/><text x='200' y='85' fill='%232563eb' font-family='Arial' font-size='14' text-anchor='middle'>Income</text><text x='200' y='110' fill='%232563eb' font-family='Arial' font-size='16' text-anchor='middle'>$100.00</text></svg>" alt="Finance Tracker" class="project-image">
+                <div class="project-content">
+                    <h3 class="project-title">Finance Tracker</h3>
+                    <p class="project-description">
+                        Track your expenses and income with this intuitive finance management tool.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">IndexedDB</span>
+                        <span class="tag">Charts.js</span>
+                        <span class="tag">JavaScript</span>
+                    </div>
+                    <a href="finance-tracker/index.html" class="cta-button">Open App</a>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200'><rect width='400' height='200' fill='%23f8f9fa'/><text x='200' y='50' fill='%232563eb' font-family='Arial' font-size='24' text-anchor='middle'>25:00</text><rect x='120' y='80' width='80' height='30' fill='%232563eb' rx='15'/><text x='160' y='100' fill='white' font-family='Arial' font-size='14' text-anchor='middle'>Work</text><rect x='210' y='80' width='80' height='30' fill='white' stroke='%232563eb' stroke-width='2' rx='15'/><text x='250' y='100' fill='%232563eb' font-family='Arial' font-size='14' text-anchor='middle'>Break</text><rect x='120' y='120' width='80' height='30' fill='%232563eb' rx='8'/><text x='160' y='140' fill='white' font-family='Arial' font-size='14' text-anchor='middle'>Start</text></svg>" alt="Pomodoro Timer" class="project-image">
+                <div class="project-content">
+                    <h3 class="project-title">Pomodoro Timer</h3>
+                    <p class="project-description">
+                        Boost your productivity with this customizable Pomodoro timer application.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">Web Storage</span>
+                        <span class="tag">Notifications</span>
+                    </div>
+                    <a href="../pomodoro/index.html" class="cta-button">Start Timer</a>
+                </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="contact-content">
+                <h2 class="contact-title">Get In Touch</h2>
+                <p class="contact-description">
+                    I'm always open to discussing new projects, creative ideas or opportunities to be part of your visions.
+                </p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                </div>
+                <a href="mailto:adithyan.ajish2023@vitstudent.ac.in" class="cta-button">Send Me an Email</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Adithyan Ajish. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Header scroll effect
+        let lastScroll = 0;
+        const header = document.querySelector('header');
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+
+            if (currentScroll <= 0) {
+                header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+            }
+
+            lastScroll = currentScroll;
+        });
+    </script>
+    <script>
+        // Intersection Observer for section animations
+        const sections = document.querySelectorAll('section');
+        
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        sections.forEach(section => {
+            sectionObserver.observe(section);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Defender | Space Shooter Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Start Screen -->
+        <div class="screen" id="start-screen">
+            <h1 class="game-title">COSMIC DEFENDER</h1>
+            <div class="glowing-btn">
+                <span class="glowing-txt">START<span class="faulty-letter">GAME</span></span>
+            </div>
+            <div class="instructions">
+                <p>Use <span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span> or <span class="key">↑</span><span class="key">←</span><span class="key">↓</span><span class="key">→</span> to move</p>
+                <p>Press <span class="key">SPACE</span> to shoot</p>
+                <p>Press <span class="key">Q</span> for special attack (charges over time)</p>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div class="screen" id="game-screen">
+            <canvas id="game-canvas"></canvas>
+            
+            <div class="game-ui">
+                <div class="score-container">
+                    <div class="score-label">SCORE</div>
+                    <div class="score-value" id="score">0</div>
+                </div>
+                
+                <div class="health-container">
+                    <div class="health-bar">
+                        <div class="health-fill" id="health-fill"></div>
+                    </div>
+                    <div class="health-label">SHIELD</div>
+                </div>
+                
+                <div class="special-container">
+                    <div class="special-bar">
+                        <div class="special-fill" id="special-fill"></div>
+                    </div>
+                    <div class="special-label">SPECIAL</div>
+                </div>
+                
+                <div class="level-container">
+                    <div class="level-label">LEVEL</div>
+                    <div class="level-value" id="level">1</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div class="screen" id="game-over-screen">
+            <h2 class="game-over-title">GAME OVER</h2>
+            <div class="final-score">
+                <span>FINAL SCORE</span>
+                <span id="final-score">0</span>
+            </div>
+            <div class="high-score">
+                <span>HIGH SCORE</span>
+                <span id="high-score">0</span>
+            </div>
+            <div class="glowing-btn restart-btn">
+                <span class="glowing-txt">PLAY<span class="faulty-letter">AGAIN</span></span>
+            </div>
+        </div>
+    </div>
+    
+    <script src="game.js"></script>
+</body>
+</html> 
