@@ -25,10 +25,10 @@ A modern, responsive portfolio website showcasing my projects, experience, and s
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/manuqwert1234/portfolio.git
+git clone https://github.com/projectlink/projectlink.github.io.git
 ```
 
-2. Create a new repository on GitHub named: `manuqwert1234.github.io`
+2. Create a new repository on GitHub named: `projectlink.github.io`
 
 3. Initialize git in the project folder:
 ```bash
@@ -39,7 +39,7 @@ git commit -m "Initial commit"
 
 4. Add the remote repository:
 ```bash
-git remote add origin https://github.com/manuqwert1234/manuqwert1234.github.io.git
+git remote add origin https://github.com/projectlink/projectlink.github.io.git
 ```
 
 5. Push the code:
@@ -47,7 +47,7 @@ git remote add origin https://github.com/manuqwert1234/manuqwert1234.github.io.g
 git push -u origin main
 ```
 
-6. Your portfolio will be available at: `https://manuqwert1234.github.io`
+6. Your portfolio will be available at: `https://projectlink.github.io`
 
 ## Local Development
 
@@ -62,4 +62,4 @@ Then visit `http://localhost:8000` in your browser.
 ## Contact
 
 Email: adithyanajish@gmail.com
-GitHub: manuqwert1234
+GitHub: projectlink
